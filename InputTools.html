@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>機械軸體資料輸入器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap; /* 允許換行 */
+            align-items: center; /* 垂直居中對齊 */
+        }
+        .form-group label {
+            flex: 0 0 150px; /* 固定標籤寬度 */
+            margin-right: 10px;
+            font-weight: bold;
+            color: #555;
+            text-align: right; /* 標籤右對齊 */
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="url"] {
+            flex: 1; /* 佔據剩餘空間 */
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* 包含 padding 和 border 在寬度內 */
+            min-width: 200px; /* 最小寬度，防止過窄 */
+        }
+        .form-group input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        .checkbox-group-wrapper {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* 每個 checkbox 之間的間距 */
+        }
+        .checkbox-group-wrapper label {
+            flex: unset; /* 取消固定寬度 */
+            text-align: left; /* 標籤左對齊 */
+            font-weight: normal; /* 取消加粗 */
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output-json {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            white-space: pre-wrap; /* 保留換行和空格 */
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all; /* 防止長單詞溢出 */
+            text-align: left;
+        }
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        /* 必填欄位標示 */
+        .required-label::after {
+            content: ' *';
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>機械軸體資料輸入</h1>
+        <form id="switchForm">
+            <div class="form-group">
+                <label for="name" class="required-label">軸體名稱:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="image">圖片名稱:</label>
+                <input type="text" id="image" name="image" placeholder="image.png // https://domain.com/image.png">
+            </div>
+            
+            <div class="form-group">
+                <label class="required-label">軸體類型:</label>
+                <div class="checkbox-group-wrapper" id="typeCheckboxes">
+                    <label><input type="checkbox" name="isLinear">線性軸</label>
+                    <label><input type="checkbox" name="isTactile">段落軸</label>
+                    <label><input type="checkbox" name="isClicky">有聲軸</label>
+                    <label><input type="checkbox" name="isSilent">靜音軸</label>
+                    <label><input type="checkbox" name="isMagnetic">磁軸</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="brand" class="required-label">廠牌:</label>
+                <input type="text" id="brand" name="brand" placeholder="Cherry, Gateron, Kailh, TTC..." required>
+            </div>
+            <div class="form-group">
+                <label for="feature">特色:</label>
+                <input type="text" id="feature" name="feature" placeholder="4字內特色，例如: 麻將音, 極順滑, 手感極佳, 回彈跟手">
+            </div>
+            <div class="form-group">
+                <label for="totalTravel">總行程 (mm):</label>
+                <input type="number" id="totalTravel" name="totalTravel" step="0.1" min="0" placeholder="4.2 不須輸入單位">
+            </div>
+            <div class="form-group">
+                <label for="actuationTravel">觸發行程 (mm):</label>
+                <input type="number" id="actuationTravel" name="actuationTravel" step="0.1" min="0" placeholder="38 不須輸入單位">
+            </div>
+            <div class="form-group">
+                <label for="actuationForce">觸發壓力 (cN):</label>
+                <input type="number" id="actuationForce" name="actuationForce" min="0" placeholder="32 不須輸入單位">
+            </div>
+            <div class="form-group">
+                <label for="error">誤差 (cN):</label>
+                <input type="number" id="error" name="error" min="0" placeholder="5 不須輸入單位">
+            </div>
+            <div class="form-group">
+                <label for="initialPressure">初始壓力 (cN):</label>
+                <input type="number" id="initialPressure" name="initialPressure" min="0" placeholder="30 不須輸入單位">
+            </div>
+            <div class="form-group">
+                <label for="bottomOutPressure">觸底壓力 (cN):</label>
+                <input type="number" id="bottomOutPressure" name="bottomOutPressure" min="0" placeholder="40 不須輸入單位">
+            </div>
+            <div class="form-group">
+                <label for="clickLife">點擊壽命:</label>
+                <input type="text" id="clickLife" name="clickLife"placeholder="5000萬, 1億萬">
+            </div>
+            <div class="form-group">
+                <label for="upperCoverMaterial">上蓋材質:</label>
+                <input type="text" id="upperCoverMaterial" name="upperCoverMaterial" placeholder="PC, PA, POM, POK, LY, UPE">
+            </div>
+            <div class="form-group">
+                <label for="lowerCoverMaterial">下蓋材質:</label>
+                <input type="text" id="lowerCoverMaterial" name="lowerCoverMaterial" placeholder="PC, PA, POM, POK, LY, UPE">
+            </div>
+            <div class="form-group">
+                <label for="crossMaterial">軸心材質:</label>
+                <input type="text" id="crossMaterial" name="crossMaterial" placeholder="PC, PA, POM, POK, LY, UPE">
+            </div>
+            <div class="form-group">
+                <label for="handFeel">手感特性:</label>
+                <input type="text" id="handFeel" name="handFeel" placeholder="滑順、輕盈，提前觸底回饋明顯，軸心穩定度高">
+            </div>
+            <div class="form-group">
+                <label for="soundFeel">聲音特性:</label>
+                <input type="text" id="soundFeel" name="soundFeel" placeholder="偏安靜清脆, 偏悶, 麻將音, 響亮">
+            </div>
+            <div class="form-group">
+                <label for="scenario">適用場景:</label>
+                <input type="text" id="scenario" name="scenario" placeholder="高速競技遊戲，追求極致反應, 安靜辦公環境，深夜使用者">
+            </div>
+            
+            <div class="form-group">
+                <label class="required-label">LED 支援:</label>
+                <div class="checkbox-group-wrapper">
+                    <label><input type="checkbox" name="ledSupport_direct" value="導光柱">導光柱</label>
+                    <label><input type="checkbox" name="ledSupport_smd" value="貼片式">貼片式</label>
+                    <label><input type="checkbox" name="ledSupport_none" value="無">無</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="required-label">腳位:</label>
+                <div class="checkbox-group-wrapper">
+                    <label><input type="checkbox" name="pinCount_3pin" value="3 腳">3 腳</label>
+                    <label><input type="checkbox" name="pinCount_5pin" value="5 腳">5 腳</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>其他分類:</label>
+                <div class="checkbox-group-wrapper">
+                    <label><input type="checkbox" name="dustproofWall">防塵壁</label>
+                    <label><input type="checkbox" name="isExtremelyQuiet">極安靜</label>
+                    <label><input type="checkbox" name="isEarlyBottomOut">提前觸底</label>
+                    <label><input type="checkbox" name="isExtendedStem">加長軸心</label>
+                    <label><input type="checkbox" name="isLightPressure">輕壓力</label>
+                    <label><input type="checkbox" name="isMushy">肉感</label>
+                    <label><input type="checkbox" name="isHIFI">HIFI軸</label>
+                    <label><input type="checkbox" name="isMahjongSound">麻將音</label>
+                    <label><input type="checkbox" name="isPebbleSound">石子音</label>
+                    <label><input type="checkbox" name="isWaterdropSound">水滴音</label>
+                    <label><input type="checkbox" name="isGaming">遊戲用途</label>
+                </div>
+            </div>
+            
+            <button type="submit">提交軸體資料</button>
+        </form>
+
+        <div class="message" id="message"></div>
+        <div class="output-json">
+            <h3>生成 JSON 預覽:</h3>
+            <pre id="jsonOutput">請填寫表單並提交</pre>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('switchForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // 阻止表單預設提交行為
+
+            const form = event.target;
+            const switchData = {};
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = 'message'; // 清除舊的訊息樣式
+            messageDiv.textContent = ''; // 清除舊的訊息
+            // --- 軸體類型必選驗證 ---
+            const typeCheckboxes = document.querySelectorAll('#typeCheckboxes input[type="checkbox"]');
+            const isAnyTypeChecked = Array.from(typeCheckboxes).some(cb => cb.checked);
+            
+            if (!isAnyTypeChecked) {
+                messageDiv.classList.add('error');
+                messageDiv.textContent = '請至少選擇一個軸體類型！';
+                return; // 阻止表單提交
+            }
+
+            // 處理圖片 URL
+            let imageInput = form.elements['image'].value;
+            if (imageInput && !imageInput.startsWith('http://') && !imageInput.startsWith('https://')) {
+                switchData.image = './img/' + imageInput;
+            } else if (imageInput) {
+                switchData.image = imageInput;
+            } else {
+                switchData.image = null; // 或者根據您的需求設定為空字串
+            }
+
+            // 處理軸體類型 (checkboxes) 和布林值屬性
+            const selectedTypes = [];
+            switchData.isLinear = form.elements['isLinear'].checked;
+            switchData.isTactile = form.elements['isTactile'].checked;
+            switchData.isClicky = form.elements['isClicky'].checked;
+            switchData.isSilent = form.elements['isSilent'].checked;
+            switchData.isMagnetic = form.elements['isMagnetic'].checked; // 新增磁軸
+
+            if (switchData.isLinear) selectedTypes.push('線性軸');
+            if (switchData.isTactile) selectedTypes.push('段落軸');
+            if (switchData.isClicky) selectedTypes.push('有聲軸');
+            if (switchData.isSilent) selectedTypes.push('靜音軸');
+            if (switchData.isMagnetic) selectedTypes.push('磁軸');
+            switchData.type = selectedTypes.join(', '); // 將選中的類型組合成字串
+
+            // 處理數值型輸入（包括可選的數值）
+            const numberFields = [
+                'totalTravel', 'actuationTravel', 'actuationForce', 'error',
+                'initialPressure', 'bottomOutPressure'
+            ];
+            numberFields.forEach(field => {
+                const value = form.elements[field].value;
+                switchData[field] = value === '' ? null : parseFloat(value);
+            });
+
+            // 處理 'clickLife'，它可能是數字或字串，也可能是 null
+            const clickLifeValue = form.elements['clickLife'].value;
+            if (clickLifeValue === '' || clickLifeValue.toLowerCase() === 'null') {
+                switchData.clickLife = null;
+            } else {
+                switchData.clickLife = clickLifeValue;
+            }
+
+            // 處理 LED 支援 (checkboxes)
+            const selectedLedTypes = [];
+            if (form.elements['ledSupport_direct'].checked) selectedLedTypes.push(form.elements['ledSupport_direct'].value);
+            if (form.elements['ledSupport_smd'].checked) selectedLedTypes.push(form.elements['ledSupport_smd'].value);
+            if (form.elements['ledSupport_none'].checked) selectedLedTypes.push(form.elements['ledSupport_none'].value);
+            switchData.ledType = selectedLedTypes.join(', ') || null; // 如果沒有勾選，則為 null
+
+            // 處理腳位 (checkboxes)
+            const selectedPinCounts = [];
+            if (form.elements['pinCount_3pin'].checked) selectedPinCounts.push(form.elements['pinCount_3pin'].value);
+            if (form.elements['pinCount_5pin'].checked) selectedPinCounts.push(form.elements['pinCount_5pin'].value);
+            switchData.pinCount = selectedPinCounts.join(', ') || null; // 如果沒有勾選，則為 null
+
+            // 處理其他文本欄位和布林值（從 formData 中直接獲取或處理）
+            const textFields = [
+                'name', 'brand', 'feature', 'upperCoverMaterial', 'lowerCoverMaterial',
+                'crossMaterial', 'handFeel', 'soundFeel', 'scenario'
+            ];
+            textFields.forEach(field => {
+                switchData[field] = form.elements[field].value || null; // 如果為空字串則設定為 null
+            });
+
+            // 處理「其他分類」的布林值，確保它們始終為 true/false
+            const otherBooleanKeys = [
+                'dustproofWall', 'isExtremelyQuiet', 'isEarlyBottomOut', 'isExtendedStem',
+                'isLightPressure', 'isMushy', 'isHIFI', 'isMahjongSound', 'isPebbleSound',
+                'isWaterdropSound', 'isGaming'
+            ];
+            otherBooleanKeys.forEach(key => {
+                switchData[key] = form.elements[key].checked;
+            });
+
+            const jsonOutputDiv = document.getElementById('jsonOutput');
+
+            try {
+                const jsonString = JSON.stringify(switchData, null, 2); // 格式化 JSON 輸出
+                jsonOutputDiv.textContent = jsonString;
+
+                // --- 模擬發送到 FastAPI 後端 ---
+                console.log('模擬發送以下 JSON 到後端:', jsonString);
+                messageDiv.textContent = '正在模擬發送資料到後端...';
+
+                // 您可以將這裡的 fetch 請求指向您的 FastAPI 端點
+                // 例如: await fetch('http://localhost:8000/api/switches', {
+                //         method: 'POST',
+                //         headers: {
+                //             'Content-Type': 'application/json'
+                //         },
+                //         body: jsonString
+                //    });
+                // 為了演示，我們使用一個延遲來模擬網路請求
+                await new Promise(resolve => setTimeout(resolve, 1000)); 
+
+                messageDiv.classList.add('success');
+                messageDiv.textContent = '資料已成功生成並模擬發送到後端！請查看控制台輸出。';
+
+            } catch (error) {
+                console.error('生成 JSON 或發送請求時出錯:', error);
+                messageDiv.classList.add('error');
+                messageDiv.textContent = '處理資料時發生錯誤，請檢查控制台。';
+            }
+        });
+    </script>
+</body>
+</html>

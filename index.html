@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>機械軸體篩選器</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="filter-sidebar">
+            <h3>篩選條件</h3>
+            <div class="filter-group">
+                <h4>軸體名稱</h4>
+                <input type="text" id="nameFilter" placeholder="輸入軸體名稱...">
+            </div>
+
+            <div class="filter-group">
+                <h4>軸體類型</h4>
+                <div class="checkbox-group" id="typeFilter">
+                    </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>廠牌</h4>
+                <div class="checkbox-group" id="brandFilter">
+                    </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>手感特性關鍵字</h4>
+                <input type="text" id="handFeelFilter" placeholder="例如：順滑, 段落...">
+            </div>
+
+            <div class="filter-group">
+                <h4>聲音特性關鍵字</h4>
+                <input type="text" id="soundFeelFilter" placeholder="例如：安靜, 響亮...">
+            </div>
+
+            <div class="filter-group">
+                <h4>適用場景關鍵字</h4>
+                <input type="text" id="scenarioFilter" placeholder="例如：遊戲, 辦公...">
+            </div>
+
+            <div class="filter-group">
+                <h4>其他分類</h4>
+                <div class="checkbox-group" id="classificationFilter">
+                    </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>腳位</h4>
+                <div class="checkbox-group" id="pinCountFilter">
+                    </div>
+            </div>
+            
+            <div class="filter-group">
+                <h4>LED 種類</h4>
+                <div class="checkbox-group" id="ledTypeFilter">
+                    </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>上蓋材質</h4>
+                <input type="text" id="upperCoverMaterialFilter" placeholder="例如：PC, PA...">
+            </div>
+            <div class="filter-group">
+                <h4>下蓋材質</h4>
+                <input type="text" id="lowerCoverMaterialFilter" placeholder="例如：Nylon, POM...">
+            </div>
+            <div class="filter-group">
+                <h4>軸心材質</h4>
+                <input type="text" id="crossMaterialFilter" placeholder="例如：POM, UPE...">
+            </div>
+
+
+            <div class="filter-group">
+                <h4>總行程 (mm)</h4>
+                <div class="range-group">
+                    <input type="number" id="totalTravelMin" placeholder="最小" step="0.1"> -
+                    <input type="number" id="totalTravelMax" placeholder="最大" step="0.1">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>觸發壓力 (cN)</h4>
+                <div class="range-group">
+                    <input type="number" id="actuationForceMin" placeholder="最小"> -
+                    <input type="number" id="actuationForceMax" placeholder="最大">
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h4>初始壓力 (cN)</h4>
+                <div class="range-group">
+                    <input type="number" id="initialPressureMin" placeholder="最小"> -
+                    <input type="number" id="initialPressureMax" placeholder="最大">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>觸底壓力 (cN)</h4>
+                <div class="range-group">
+                    <input type="number" id="bottomOutPressureMin" placeholder="最小"> -
+                    <input type="number" id="bottomOutPressureMax" placeholder="最大">
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button id="applyFilters">套用篩選</button>
+                <button id="resetFilters">重設篩選</button>
+            </div>
+        </aside>
+
+        <main class="card-container" id="cardContainer">
+        </main>
+
+        <div class="card card-template" style="display: none;">
+            <div class="card-image">
+                <img src="" alt="">
+            </div>
+            <div class="card-header">
+                <h2></h2>
+                <span class="type"></span>
+            </div>
+            <div class="card-body">
+                <div class="param brand">
+                    <span class="label">廠牌:</span>
+                    <span class="value"></span>
+                </div>
+                <div class="param feature">
+                    <span class="label">特色:</span>
+                    <span class="value"></span>
+                </div>
+                <div class="param total-travel">
+                    <span class="label">總行程:</span>
+                    <span class="value">
+                        <span class="data"></span>
+                        <span class="unit">mm</span>
+                    </span>
+                </div>
+                <div class="param actuation-travel">
+                    <span class="label">觸發行程:</span>
+                    <span class="value">
+                        <span class="data"></span>
+                        <span class="unit">mm</span>
+                    </span>
+                </div>
+                <div class="param actuation-force">
+                    <span class="label">觸發壓力:</span>
+                    <span class="value">
+                        <span class="data"></span>
+                        <span class="unit">cN</span>
+                    </span>
+                </div>
+                <div class="param error">
+                    <span class="label">誤差:</span>
+                    <span class="value">
+                        <span class="interval"></span>
+                        <span class="data"></span>
+                        <span class="unit">cN</span>
+                    </span>
+                </div>
+                <div class="param initial-pressure">
+                    <span class="label">初始壓力:</span>
+                    <span class="value">
+                        <span class="data"></span>
+                        <span class="unit">cN</span>
+                    </span>
+                </div>
+                <div class="param bottom-out-pressure">
+                    <span class="label">觸底壓力:</span>
+                    <span class="value">
+                        <span class="data"></span>
+                        <span class="unit">cN</span>
+                    </span>
+                </div>
+                <div class="param click-life">
+                    <span class="label">點擊壽命:</span>
+                    <span class="value"></span>
+                </div>
+                <div class="param upper-cover-material">
+                    <span class="label">上蓋材質:</span>
+                    <span class="value"></span>
+                </div>
+                <div class="param lower-cover-material">
+                    <span class="label">下蓋材質:</span>
+                    <span class="value"></span>
+                </div>
+                <div class="param cross-material">
+                    <span class="label">軸心材質:</span>
+                    <span class="value"></span>
+                </div>
+                <div class="param led-type">
+                    <span class="label">LED種類:</span>
+                    <span class="value"></span>
+                </div>
+                <div class="param pin-count">
+                    <span class="label">腳位:</span>
+                    <span class="value">
+                        <span class="data"></span>
+                        <span class="unit">腳</span>
+                    </span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <p class="hand-feel"><span class="highlight">手感特性:</span></p>
+                <p class="sound-feel"><span class="highlight">聲音特性:</span></p>
+                <p class="scenario"><span class="highlight">適用場景:</span></p>
+            </div>
+        </div>
+    </div>
+<script src="./all.js"></script>
+</body>
+</html>
